@@ -14,7 +14,9 @@ const Home = () => {
 
     return (
         <div className="flex">
-            <Sidebar />
+            <div className='z-50'>
+                <Sidebar />
+            </div>
             <div className="flex-1 flex flex-col p-6 items-center">
                 <div className="w-full flex justify-end">
                     <button
