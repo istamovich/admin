@@ -2,22 +2,18 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import AddProductModal from '../../components/AddProductModal';
+import AddProductModal from '../AddProductModal'; // Import AddProductModal component
+import EditProductModal from '../EditProductModal'; // 👈 qo‘shildi
+
 
 const ProductsTable = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState(null);
-    const [isModalOpen, setIsModalOpen] = useState(false); // AddProduct modal state
-
-    const handleOpenModal = () => {
-        setIsModalOpen(true); // Modalni ochish
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false); // Modalni yopish
-    };
+    const [showAddModal, setShowAddModal] = useState(false); // State to control Add Product modal visibility
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [editingProduct, setEditingProduct] = useState(null);
 
     useEffect(() => {
         fetchProducts();
@@ -38,6 +34,15 @@ const ProductsTable = () => {
     const confirmDelete = (id) => {
         setSelectedProductId(id);
         setShowDeleteModal(true);
+    };
+
+    const handleEdit = (product) => {
+        setEditingProduct(product);
+        setShowEditModal(true);
+    };
+
+    const handleProductUpdated = () => {
+        fetchProducts();
     };
 
     const handleDelete = async () => {
@@ -70,6 +75,14 @@ const ProductsTable = () => {
         setSelectedProductId(null);
     };
 
+    const handleAddProduct = () => {
+        setShowAddModal(true); // Show the AddProductModal
+    };
+
+    const handleProductAdded = () => {
+        fetchProducts(); // Refresh the product list after adding a product
+    };
+
     if (loading) {
         return (
             <div className="text-center p-8 text-xl font-semibold">
@@ -81,15 +94,7 @@ const ProductsTable = () => {
     if (products.length === 0) {
         return (
             <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-[1050px] ml-[255px]">
-                <div className="flex justify-between items-center">
-                    <h2 className="text-xl font-bold mb-4">Products</h2>
-                    <button
-                        onClick={handleOpenModal} // Modal ochiladi
-                        className="cursor-pointer mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-                    >
-                        Add Product
-                    </button>
-                </div>
+                <h2 className="text-xl font-bold mb-4">Products</h2>
 
                 <div className="text-center py-6">
                     <img
@@ -111,7 +116,7 @@ const ProductsTable = () => {
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-bold mb-4">Products</h2>
                     <button
-                        onClick={handleOpenModal} // Modal ochiladi
+                        onClick={handleAddProduct} // Open AddProductModal
                         className="cursor-pointer mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
                     >
                         Add Product
@@ -177,10 +182,11 @@ const ProductsTable = () => {
                                         )}
                                     </td>
                                     <td className="border border-gray-300 p-2">
-                                        <button className="px-4 py-2 mr-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+                                        <button onClick={() => handleEdit(product)} className="px-4 py-2 mr-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
                                             Edit
                                         </button>
                                         <button
+
                                             onClick={() => confirmDelete(product.id)}
                                             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
                                         >
@@ -228,12 +234,19 @@ const ProductsTable = () => {
                 </div>
             )}
 
-            {isModalOpen && (
-                <AddProductModal
-                    onClose={handleCloseModal} // Modalni yopish
-                    fetchProducts={fetchProducts} // Mahsulotlarni yangilash
-                />
-            )}
+            {/* AddProductModal component */}
+            <AddProductModal
+                isOpen={showAddModal}
+                onClose={() => setShowAddModal(false)} // ✅ to‘g‘ri props nomi
+                onProductAdded={handleProductAdded}
+            />
+            <EditProductModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                product={editingProduct}
+                onProductUpdated={handleProductUpdated}
+            />
+
         </div>
     );
 };

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
+const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
     const [formData, setFormData] = useState({
         title_en: '',
         title_ru: '',
@@ -29,8 +29,17 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
     const [materialValue, setMaterialValue] = useState('');
 
     useEffect(() => {
-        if (isOpen) fetchData();
-    }, [isOpen]);
+        if (isOpen && product) {
+            setFormData({
+                ...product,
+                sizes_id: product.sizes?.map(s => s.id) || [],
+                colors_id: product.colors?.map(c => c.id) || [],
+                materials: product.materials || {},
+                images: []
+            });
+            fetchData();
+        }
+    }, [isOpen, product]);
 
     const fetchData = async () => {
         try {
@@ -73,10 +82,7 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
 
     const handleImageUpload = (e) => {
         const files = Array.from(e.target.files);
-        setFormData((prev) => ({
-            ...prev,
-            images: files
-        }));
+        setFormData((prev) => ({ ...prev, images: files }));
     };
 
     const handleSubmit = async (e) => {
@@ -100,24 +106,22 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
 
             formData.sizes_id.forEach(id => form.append('sizes_id[]', id));
             formData.colors_id.forEach(id => form.append('colors_id[]', id));
-
-            formData.images.forEach((image, i) => {
-                form.append('files', image); // yoki 'file', yoki 'images[]' — backendga qarab
+            formData.images.forEach((image) => {
+                form.append('files', image);
             });
-            
 
-            await axios.post('https://back.ifly.com.uz/api/product', form, {
+            await axios.patch(`https://back.ifly.com.uz/api/product/${product.id}`, form, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 }
             });
 
-            toast.success('Product added successfully');
-            onProductAdded();
+            toast.success('Product updated successfully');
+            onProductUpdated();
             onClose();
         } catch (error) {
-            toast.error('Failed to add product');
+            toast.error('Failed to update product');
             console.error(error);
         }
     };
@@ -127,7 +131,7 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded-lg w-[800px] max-h-[90vh] overflow-y-auto">
-                <h2 className="text-xl font-bold mb-4">Add New Product</h2>
+                <h2 className="text-xl font-bold mb-4">Edit Product</h2>
                 <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
                     {['title_en', 'title_ru', 'title_de'].map((lang) => (
                         <input
@@ -249,8 +253,8 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
                     </div>
 
                     <div className="col-span-2 flex justify-end gap-2">
-                        <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                            Add Product
+                        <button type="submit" className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
+                            Update Product
                         </button>
                         <button type="button" onClick={onClose} className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">
                             Cancel
@@ -262,4 +266,4 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
     );
 };
 
-export default AddProductModal;
+export default EditProductModal;
