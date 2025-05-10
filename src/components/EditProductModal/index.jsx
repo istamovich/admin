@@ -274,7 +274,7 @@ const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
                         >
                             <option value="">Select Discount</option>
                             {discounts.map((d) => (
-                                <option key={d.id} value={d.id}>{d.name}</option>
+                                <option key={d.id} value={d.id}>{d.discount}</option>
                             ))}
                         </select>
                     </div>
