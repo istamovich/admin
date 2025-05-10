@@ -32,7 +32,7 @@ const News = () => {
 
   const fetchNews = async () => {
     try {
-      const response = await axios.get('https://back.ifly.com.uz/api/news');
+      const response = await axios.get('https://testaoron.limsa.uz/api/news');
       setNews(response.data.data);
     } catch (error) {
       toast.error('Failed to fetch news');
@@ -60,7 +60,7 @@ const News = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`https://back.ifly.com.uz/api/news/${selectedNewsId}`);
+      await axios.delete(`https://testaoron.limsa.uz/api/news/${selectedNewsId}`);
       setNews(prev => prev.filter(item => item.id !== selectedNewsId));
       toast.success('News deleted successfully');
     } catch (error) {
@@ -119,10 +119,10 @@ const News = () => {
 
     try {
       if (isEditing) {
-        await axios.patch(`https://back.ifly.com.uz/api/news/${editId}`, submitData);
+        await axios.patch(`https://testaoron.limsa.uz/api/news/${editId}`, submitData);
         toast.success('News updated');
       } else {
-        await axios.post('https://back.ifly.com.uz/api/news', submitData);
+        await axios.post('https://testaoron.limsa.uz/api/news', submitData);
         toast.success('News added');
       }
       fetchNews();
@@ -174,7 +174,7 @@ const News = () => {
                   <tr key={item.id} className="text-center hover:bg-gray-100">
                     <td className="border p-2">{index + 1}</td>
                     <td className="border p-2">
-                      <img src={`https://back.ifly.com.uz/${item.image}`} alt={item.title_en} className="w-16 h-16 object-cover rounded-md mx-auto" />
+                      <img src={`https://testaoron.limsa.uz/${item.image}`} alt={item.title_en} className="w-16 h-16 object-cover rounded-md mx-auto" />
                     </td>
                     <td className="border p-2">{item.title_en}</td>
                     <td className="border p-2">{item.description_en}</td>

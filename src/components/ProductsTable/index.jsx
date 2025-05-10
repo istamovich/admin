@@ -21,7 +21,7 @@ const ProductsTable = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('https://back.ifly.com.uz/api/product');
+            const response = await axios.get('https://testaoron.limsa.uz/api/product');
             setProducts(response.data.data.products);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -53,7 +53,7 @@ const ProductsTable = () => {
                 return;
             }
 
-            await axios.delete(`https://back.ifly.com.uz/api/product/${selectedProductId}`, {
+            await axios.delete(`https://testaoron.limsa.uz/api/product/${selectedProductId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -94,8 +94,16 @@ const ProductsTable = () => {
     if (products.length === 0) {
         return (
             <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-[1050px] ml-[255px]">
-                <h2 className="text-xl font-bold mb-4">Products</h2>
-
+                <div className="flex justify-between items-center">
+                    <h2 className="text-xl font-bold mb-4">Products</h2>
+                    <button
+                        onClick={handleAddProduct}
+                        className="cursor-pointer mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
+                    >
+                        Add Product
+                    </button>
+                </div>
+    
                 <div className="text-center py-6">
                     <img
                         src="https://aoron.nippon.com.uz/assets/noData-DPgWaiIB.png"
@@ -104,11 +112,19 @@ const ProductsTable = () => {
                     />
                     <p className="text-gray-500 mt-2">No Data Available</p>
                 </div>
-
+    
                 <ToastContainer />
+    
+                {/* Add Modalni shu yerda ham qo‘shamiz */}
+                <AddProductModal
+                    isOpen={showAddModal}
+                    onClose={() => setShowAddModal(false)}
+                    onProductAdded={handleProductAdded}
+                />
             </div>
         );
     }
+    
 
     return (
         <div className="relative">
@@ -116,7 +132,7 @@ const ProductsTable = () => {
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-bold mb-4">Products</h2>
                     <button
-                        onClick={handleAddProduct} // Open AddProductModal
+                        onClick={handleAddProduct} 
                         className="cursor-pointer mb-4 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
                     >
                         Add Product
@@ -147,7 +163,7 @@ const ProductsTable = () => {
                                     <td className="border border-gray-300 p-2 w-[150px] h-[100px]">
                                         {product.images.length > 0 ? (
                                             <img
-                                                src={`https://back.ifly.com.uz/${product.images[0]}`}
+                                                src={`https://testaoron.limsa.uz/${product.images[0]}`}
                                                 alt={product.title_en}
                                                 className="w-full h-full rounded-sm object-cover"
                                             />
@@ -168,7 +184,7 @@ const ProductsTable = () => {
                                         {product.sizes.length > 0 ? product.sizes[0].size : ''}
                                     </td>
                                     <td className="border border-gray-300 p-2">
-                                        {product.discount ? `${product.discount}%` : 'No Discount'}
+                                        {product.discount ? `${product.discount?.discount}%` : 'No Discount'}
                                     </td>
                                     <td className="border border-gray-300 p-2">
                                         {product.materials && Object.keys(product.materials).length > 0 ? (

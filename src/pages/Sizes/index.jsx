@@ -28,7 +28,7 @@ const Sizes = () => {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
 
-            const response = await axios.get('https://back.ifly.com.uz/api/sizes', {
+            const response = await axios.get('https://testaoron.limsa.uz/api/sizes', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setSizes(response.data.data);
@@ -57,7 +57,7 @@ const Sizes = () => {
     const handleDelete = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`https://back.ifly.com.uz/api/sizes/${selectedSizeId}`, {
+            await axios.delete(`https://testaoron.limsa.uz/api/sizes/${selectedSizeId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setSizes(sizes.filter((size) => size.id !== selectedSizeId));
@@ -84,7 +84,7 @@ const Sizes = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.patch(`https://back.ifly.com.uz/api/sizes/${selectedSizeId}`, editSizeData, {
+            await axios.patch(`https://testaoron.limsa.uz/api/sizes/${selectedSizeId}`, editSizeData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast.success('Size updated successfully');
@@ -103,7 +103,7 @@ const Sizes = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.post(`https://back.ifly.com.uz/api/sizes`, newSizeData, {
+            await axios.post(`https://testaoron.limsa.uz/api/sizes`, newSizeData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast.success('Size added successfully');

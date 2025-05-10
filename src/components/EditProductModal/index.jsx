@@ -44,10 +44,10 @@ const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
     const fetchData = async () => {
         try {
             const [catRes, sizeRes, colorRes, discountRes] = await Promise.all([
-                axios.get('https://back.ifly.com.uz/api/category'),
-                axios.get('https://back.ifly.com.uz/api/sizes'),
-                axios.get('https://back.ifly.com.uz/api/colors'),
-                axios.get('https://back.ifly.com.uz/api/discount')
+                axios.get('https://testaoron.limsa.uz/api/category'),
+                axios.get('https://testaoron.limsa.uz/api/sizes'),
+                axios.get('https://testaoron.limsa.uz/api/colors'),
+                axios.get('https://testaoron.limsa.uz/api/discount')
             ]);
             setCategories(catRes.data.data);
             setSizes(sizeRes.data.data);
@@ -110,7 +110,7 @@ const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
                 form.append('files', image);
             });
 
-            await axios.patch(`https://back.ifly.com.uz/api/product/${product.id}`, form, {
+            await axios.patch(`https://testaoron.limsa.uz/api/product/${product.id}`, form, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
@@ -130,104 +130,169 @@ const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
 
     return (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg w-[800px] max-h-[90vh] overflow-y-auto">
-                <h2 className="text-xl font-bold mb-4">Edit Product</h2>
-                <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-                    {['title_en', 'title_ru', 'title_de'].map((lang) => (
+            <div className="relative bg-white p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
+                <button onClick={onClose} className="absolute top-2 right-2 text-white bg-red-500 px-2 py-[2px] cursor-pointer rounded-full">X</button>
+                <h3 className="text-xl font-bold mb-4">Update Product</h3>
+                <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-4">
+    
+                    {/* Titles */}
+                    {['en', 'ru', 'de'].map((lang) => (
+                        <div key={`title_${lang}`}>
+                            <label className="block text-sm font-medium mb-1">
+                                Product Title ({lang.toUpperCase()})
+                            </label>
+                            <input
+                                type="text"
+                                name={`title_${lang}`}
+                                value={formData[`title_${lang}`]}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                maxLength={80}
+                                required
+                            />
+                        </div>
+                    ))}
+    
+                    {/* Descriptions */}
+                    {['en', 'ru', 'de'].map((lang) => (
+                        <div key={`description_${lang}`}>
+                            <label className="block text-sm font-medium mb-1">
+                                Product Description ({lang.toUpperCase()})
+                            </label>
+                            <textarea
+                                name={`description_${lang}`}
+                                value={formData[`description_${lang}`]}
+                                onChange={handleInputChange}
+                                className="w-full p-2 border border-gray-300 rounded"
+                                maxLength={500}
+                                required
+                            />
+                        </div>
+                    ))}
+    
+                    {/* Price and min sell */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Price</label>
                         <input
-                            key={lang}
-                            name={lang}
-                            value={formData[lang]}
+                            type="number"
+                            name="price"
+                            value={formData.price}
                             onChange={handleInputChange}
-                            placeholder={`Title (${lang.split('_')[1].toUpperCase()})`}
-                            className="border p-2 rounded"
+                            className="w-full p-2 border border-gray-300 rounded"
+                            maxLength={10}
                             required
                         />
-                    ))}
-                    {['description_en', 'description_ru', 'description_de'].map((lang) => (
-                        <textarea
-                            key={lang}
-                            name={lang}
-                            value={formData[lang]}
+                    </div>
+    
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Minimal nechta sotish</label>
+                        <input
+                            type="number"
+                            name="min_sell"
+                            step="1"
+                            value={formData.min_sell}
                             onChange={handleInputChange}
-                            placeholder={`Description (${lang.split('_')[1].toUpperCase()})`}
-                            className="border p-2 rounded col-span-2"
-                            required
+                            className="w-full p-2 border border-gray-300 rounded"
                         />
-                    ))}
-                    <input
-                        type="number"
-                        name="price"
-                        value={formData.price}
-                        onChange={handleInputChange}
-                        placeholder="Price"
-                        className="border p-2 rounded"
-                        required
-                    />
-                    <input
-                        type="number"
-                        name="min_sell"
-                        value={formData.min_sell}
-                        onChange={handleInputChange}
-                        placeholder="Minimum Sell"
-                        className="border p-2 rounded"
-                    />
-                    <select
-                        name="category_id"
-                        value={formData.category_id}
-                        onChange={handleInputChange}
-                        className="border p-2 rounded"
-                        required
-                    >
-                        <option value="">Select Category</option>
-                        {categories.map((cat) => (
-                            <option key={cat.id} value={cat.id}>{cat.name_en}</option>
-                        ))}
-                    </select>
-                    <select
-                        multiple
-                        value={formData.sizes_id}
-                        onChange={(e) => handleSelectChange(e, 'sizes_id')}
-                        className="border p-2 rounded"
-                    >
-                        {sizes.map((s) => (
-                            <option key={s.id} value={s.id}>{s.size}</option>
-                        ))}
-                    </select>
-                    <select
-                        multiple
-                        value={formData.colors_id}
-                        onChange={(e) => handleSelectChange(e, 'colors_id')}
-                        className="border p-2 rounded"
-                    >
-                        {colors.map((c) => (
-                            <option key={c.id} value={c.id}>{c.color_en}</option>
-                        ))}
-                    </select>
-                    <select
-                        name="discount_id"
-                        value={formData.discount_id}
-                        onChange={handleInputChange}
-                        className="border p-2 rounded"
-                    >
-                        <option value="">Select Discount</option>
-                        {discounts.map((d) => (
-                            <option key={d.id} value={d.id}>{d.name}</option>
-                        ))}
-                    </select>
-
-                    <div className="col-span-2">
-                        <label className="block mb-1 font-medium">Images</label>
+                    </div>
+    
+                    {/* Category */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Category</label>
+                        <select
+                            name="category_id"
+                            value={formData.category_id}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            required
+                        >
+                            <option value="">Select Category</option>
+                            {categories.map((cat) => (
+                                <option key={cat.id} value={cat.id}>{cat.name_en}</option>
+                            ))}
+                        </select>
+                    </div>
+    
+                    {/* Sizes (Checkbox) */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Sizes</label>
+                        <div className="flex flex-wrap gap-4">
+                            {sizes.map((s) => (
+                                <div className="flex items-center" key={s.id}>
+                                    <input
+                                        type="checkbox"
+                                        id={`size-${s.id}`}
+                                        value={s.id}
+                                        checked={formData.sizes_id.includes(s.id)}
+                                        onChange={(e) => {
+                                            const newSizes = e.target.checked
+                                                ? [...formData.sizes_id, s.id]
+                                                : formData.sizes_id.filter((id) => id !== s.id);
+                                            setFormData((prev) => ({ ...prev, sizes_id: newSizes }));
+                                        }}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor={`size-${s.id}`} className="text-sm">{s.size}</label>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+    
+                    {/* Colors (Checkbox) */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Colors</label>
+                        <div className="flex flex-wrap gap-4">
+                            {colors.map((c) => (
+                                <div className="flex items-center" key={c.id}>
+                                    <input
+                                        type="checkbox"
+                                        id={`color-${c.id}`}
+                                        value={c.id}
+                                        checked={formData.colors_id.includes(c.id)}
+                                        onChange={(e) => {
+                                            const newColors = e.target.checked
+                                                ? [...formData.colors_id, c.id]
+                                                : formData.colors_id.filter((id) => id !== c.id);
+                                            setFormData((prev) => ({ ...prev, colors_id: newColors }));
+                                        }}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor={`color-${c.id}`} className="text-sm">{c.color_en}</label>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+    
+                    {/* Discount */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Discount</label>
+                        <select
+                            name="discount_id"
+                            value={formData.discount_id}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                        >
+                            <option value="">Select Discount</option>
+                            {discounts.map((d) => (
+                                <option key={d.id} value={d.id}>{d.name}</option>
+                            ))}
+                        </select>
+                    </div>
+    
+                    {/* Images Upload */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Images</label>
                         <input
                             type="file"
                             multiple
                             onChange={handleImageUpload}
-                            className="border p-2 rounded w-full"
+                            className="w-full p-2 border border-gray-300 rounded"
                         />
                     </div>
-
-                    <div className="col-span-2">
-                        <label className="block font-medium">Materials</label>
+    
+                    {/* Materials */}
+                    <div>
+                        <label className="block text-sm font-medium mb-1">Materials</label>
                         <div className="flex gap-2 mb-2">
                             <input
                                 value={materialKey}
@@ -251,8 +316,9 @@ const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
                             ))}
                         </div>
                     </div>
-
-                    <div className="col-span-2 flex justify-end gap-2">
+    
+                    {/* Submit / Cancel */}
+                    <div className="flex justify-end gap-2 pt-2">
                         <button type="submit" className="bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700">
                             Update Product
                         </button>
@@ -263,7 +329,7 @@ const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
                 </form>
             </div>
         </div>
-    );
+    );    
 };
 
 export default EditProductModal;

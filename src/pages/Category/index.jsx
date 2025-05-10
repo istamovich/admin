@@ -26,7 +26,7 @@ const Category = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('https://back.ifly.com.uz/api/category');
+            const response = await axios.get('https://testaoron.limsa.uz/api/category');
             setCategories(response.data.data);
         } catch (error) {
             toast.error('Failed to fetch categories');
@@ -51,7 +51,7 @@ const Category = () => {
             const token = localStorage.getItem('token');
             if (!token) return toast.error('No token found. Please login again.');
 
-            await axios.delete(`https://back.ifly.com.uz/api/category/${selectedCategoryId}`, {
+            await axios.delete(`https://testaoron.limsa.uz/api/category/${selectedCategoryId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -80,7 +80,7 @@ const Category = () => {
             const token = localStorage.getItem('token');
             if (!token) return toast.error('No token found. Please login again.');
 
-            await axios.patch(`https://back.ifly.com.uz/api/category/${selectedCategoryId}`, editData, {
+            await axios.patch(`https://testaoron.limsa.uz/api/category/${selectedCategoryId}`, editData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -110,7 +110,7 @@ const Category = () => {
             const token = localStorage.getItem('token');
             if (!token) return toast.error('No token found. Please login again.');
 
-            await axios.post(`https://back.ifly.com.uz/api/category`, newCategory, {
+            await axios.post(`https://testaoron.limsa.uz/api/category`, newCategory, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

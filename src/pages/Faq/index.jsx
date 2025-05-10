@@ -34,7 +34,7 @@ const Faq = () => {
         return;
       }
 
-      const response = await axios.get('https://back.ifly.com.uz/api/faq', {
+      const response = await axios.get('https://testaoron.limsa.uz/api/faq', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -68,7 +68,7 @@ const Faq = () => {
         return;
       }
 
-      await axios.delete(`https://back.ifly.com.uz/api/faq/${selectedFaqId}`, {
+      await axios.delete(`https://testaoron.limsa.uz/api/faq/${selectedFaqId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -96,7 +96,7 @@ const Faq = () => {
         return;
       }
 
-      await axios.patch(`https://back.ifly.com.uz/api/faq/${selectedFaqId}`, formData, {
+      await axios.patch(`https://testaoron.limsa.uz/api/faq/${selectedFaqId}`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -129,7 +129,7 @@ const Faq = () => {
         return;
       }
 
-      await axios.post(`https://back.ifly.com.uz/api/faq`, formData, {
+      await axios.post(`https://testaoron.limsa.uz/api/faq`, formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

@@ -28,7 +28,7 @@ const Colors = () => {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
 
-            const response = await axios.get('https://back.ifly.com.uz/api/colors', {
+            const response = await axios.get('https://testaoron.limsa.uz/api/colors', {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -62,7 +62,7 @@ const Colors = () => {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
 
-            const response = await axios.post('https://back.ifly.com.uz/api/colors', colorData, {
+            const response = await axios.post('https://testaoron.limsa.uz/api/colors', colorData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -84,7 +84,7 @@ const Colors = () => {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
 
-            await axios.delete(`https://back.ifly.com.uz/api/colors/${selectedColorId}`, {
+            await axios.delete(`https://testaoron.limsa.uz/api/colors/${selectedColorId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -116,7 +116,7 @@ const Colors = () => {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
 
-            await axios.patch(`https://back.ifly.com.uz/api/colors/${selectedColorId}`, colorData, {
+            await axios.patch(`https://testaoron.limsa.uz/api/colors/${selectedColorId}`, colorData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

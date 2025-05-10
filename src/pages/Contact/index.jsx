@@ -36,7 +36,7 @@ const Contact = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
-            const response = await axios.get('https://back.ifly.com.uz/api/contact', {
+            const response = await axios.get('https://testaoron.limsa.uz/api/contact', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setContacts(response.data.data);
@@ -63,7 +63,7 @@ const Contact = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
-            await axios.delete(`https://back.ifly.com.uz/api/contact/${selectedContactId}`, {
+            await axios.delete(`https://testaoron.limsa.uz/api/contact/${selectedContactId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setContacts(contacts.filter(contact => contact.id !== selectedContactId));
@@ -97,7 +97,7 @@ const Contact = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
-            await axios.patch(`https://back.ifly.com.uz/api/contact/${selectedContactId}`, editData, {
+            await axios.patch(`https://testaoron.limsa.uz/api/contact/${selectedContactId}`, editData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast.success('Contact updated successfully');
@@ -117,7 +117,7 @@ const Contact = () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
-            await axios.post(`https://back.ifly.com.uz/api/contact`, newContact, {
+            await axios.post(`https://testaoron.limsa.uz/api/contact`, newContact, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast.success('Contact added successfully');

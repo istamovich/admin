@@ -42,7 +42,7 @@ const Discount = () => {
                 return;
             }
 
-            const response = await axios.get('https://back.ifly.com.uz/api/discount', {
+            const response = await axios.get('https://testaoron.limsa.uz/api/discount', {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setDiscounts(response.data.data);
@@ -71,7 +71,7 @@ const Discount = () => {
     const handleDelete = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`https://back.ifly.com.uz/api/discount/${selectedDiscountId}`, {
+            await axios.delete(`https://testaoron.limsa.uz/api/discount/${selectedDiscountId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setDiscounts(discounts.filter((discount) => discount.id !== selectedDiscountId));
@@ -101,7 +101,7 @@ const Discount = () => {
     const handleEditSubmit = async () => {
         try {
             const token = localStorage.getItem('token');
-            await axios.patch(`https://back.ifly.com.uz/api/discount/${editData.id}`, editData, {
+            await axios.patch(`https://testaoron.limsa.uz/api/discount/${editData.id}`, editData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast.success('Discount updated successfully');
@@ -125,7 +125,7 @@ const Discount = () => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            await axios.post('https://back.ifly.com.uz/api/discount', newDiscount, {
+            await axios.post('https://testaoron.limsa.uz/api/discount', newDiscount, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast.success('Discount added successfully');

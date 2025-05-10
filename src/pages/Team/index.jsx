@@ -30,7 +30,7 @@ const Team = () => {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
 
-            const response = await axios.get('https://back.ifly.com.uz/api/team-section', {
+            const response = await axios.get('https://testaoron.limsa.uz/api/team-section', {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -59,7 +59,7 @@ const Team = () => {
             const token = localStorage.getItem('token');
             if (!token) return navigate('/login');
 
-            await axios.delete(`https://back.ifly.com.uz/api/team-section/${selectedTeamId}`, {
+            await axios.delete(`https://testaoron.limsa.uz/api/team-section/${selectedTeamId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -89,7 +89,7 @@ const Team = () => {
         setIsEditing(true);
         setSelectedTeamId(member.id);
         setFormData({
-            file: `https://back.ifly.com.uz/${member.image}`,
+            file: `https://testaoron.limsa.uz/${member.image}`,
             full_name: member.full_name,
             position_de: member.position_de,
             position_ru: member.position_ru,
@@ -132,7 +132,7 @@ const Team = () => {
 
             if (isEditing) {
                 await axios.patch(
-                    `https://back.ifly.com.uz/api/team-section/${selectedTeamId}`, // ✅ to‘g‘ri endpoint
+                    `https://testaoron.limsa.uz/api/team-section/${selectedTeamId}`, // ✅ to‘g‘ri endpoint
                     data,
                     {
                         headers: {
@@ -145,7 +145,7 @@ const Team = () => {
                 toast.success('Team member updated');
             } else {
                 await axios.post(
-                    'https://back.ifly.com.uz/api/team-section',
+                    'https://testaoron.limsa.uz/api/team-section',
                     data,
                     {
                         headers: {
@@ -221,7 +221,7 @@ const Team = () => {
                                         <td className="border p-2">{index + 1}</td>
                                         <td className="border p-2">
                                             <img
-                                                src={`https://back.ifly.com.uz/${member.image}`}
+                                                src={`https://testaoron.limsa.uz/${member.image}`}
                                                 alt="Team"
                                                 className="mx-auto w-[150px] h-[100px] object-cover"
                                             />

@@ -17,7 +17,7 @@ const Login = () => {
     setError('');
 
     try {
-      const res = await fetch('https://back.ifly.com.uz/api/auth/login', {
+      const res = await fetch('https://testaoron.limsa.uz/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
