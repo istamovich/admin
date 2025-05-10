@@ -45,7 +45,9 @@ const Colors = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('refresh_token');
         navigate('/login');
+        window.location.reload(); // sahifani to‘liq yangilaydi
     };
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;

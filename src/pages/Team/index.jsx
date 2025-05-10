@@ -47,7 +47,9 @@ const Team = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('refresh_token');
         navigate('/login');
+        window.location.reload(); // sahifani to‘liq yangilaydi
     };
+    
 
     const confirmDelete = (id) => {
         setSelectedTeamId(id);

@@ -45,7 +45,9 @@ const News = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('refresh_token');
     navigate('/login');
-  };
+    window.location.reload(); // sahifani to‘liq yangilaydi
+};
+
 
   const closeModal = () => {
     setShowDeleteModal(false);

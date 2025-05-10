@@ -10,7 +10,9 @@ const Home = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('refresh_token');
         navigate('/login');
+        window.location.reload(); 
     };
+    
 
     return (
         <div className="flex">
