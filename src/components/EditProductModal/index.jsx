@@ -126,6 +126,15 @@ const EditProductModal = ({ isOpen, onClose, product, onProductUpdated }) => {
         }
     };
 
+    const removeMaterial = (keyToRemove) => {
+        setFormData((prev) => {
+            const newMaterials = { ...prev.materials };
+            delete newMaterials[keyToRemove];
+            return { ...prev, materials: newMaterials };
+        });
+    };
+    
+
     if (!isOpen) return null;
 
     return (

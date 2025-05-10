@@ -15,8 +15,7 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
   const [sizes, setSizes] = useState([]);
   const [colors, setColors] = useState([]);
   const [discounts, setDiscounts] = useState([]);
-  const [materialKey, setMaterialKey] = useState('');
-  const [materialValue, setMaterialValue] = useState('');
+  const [materialsList, setMaterialsList] = useState([{ key: '', value: '' }]);
 
   useEffect(() => {
     if (isOpen) fetchData();
@@ -57,51 +56,72 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
     setFormData(prev => ({ ...prev, images: Array.from(e.target.files) }));
   };
 
-  const addMaterial = () => {
-    if (materialKey && materialValue) {
-      setFormData(prev => ({
-        ...prev,
-        materials: { ...prev.materials, [materialKey]: materialValue }
-      }));
-      setMaterialKey('');
-      setMaterialValue('');
-    }
+  const handleMaterialChange = (index, field, value) => {
+    const newList = [...materialsList];
+    newList[index][field] = value;
+    setMaterialsList(newList);
+  
+    // formData.materials ni ham yangilaymiz
+    const updatedMaterials = {};
+    newList.forEach(item => {
+      if (item.key && item.value) {
+        updatedMaterials[item.key] = item.value;
+      }
+    });
+    setFormData(prev => ({ ...prev, materials: updatedMaterials }));
   };
+  
+  const removeMaterial = (index) => {
+    const newList = materialsList.filter((_, i) => i !== index);
+    setMaterialsList(newList);
+  
+    // formData.materials ni yangilaymiz
+    const updatedMaterials = {};
+    newList.forEach(item => {
+      if (item.key && item.value) {
+        updatedMaterials[item.key] = item.value;
+      }
+    });
+    setFormData(prev => ({ ...prev, materials: updatedMaterials }));
+  };
+  
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+
     try {
       const token = localStorage.getItem('token');
       if (!token) return toast.error('Please login');
-  
+
       const form = new FormData();
       ['title_en', 'title_ru', 'title_de', 'description_en', 'description_ru', 'description_de', 'price', 'category_id', 'discount_id', 'min_sell']
         .forEach(field => form.append(field, formData[field] || ''));
-  
-      // 'materials' ni to'g'ri formatda yuboring
+
       form.append('materials', JSON.stringify(formData.materials));
-      
+
       formData.sizes_id.forEach(id => form.append('sizes_id[]', id));
       formData.colors_id.forEach(id => form.append('colors_id[]', id));
       formData.images.forEach(file => form.append('files', file));
-  
+
       await axios.post('https://testaoron.limsa.uz/api/product', form, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
         }
       });
-  
+
       toast.success('Product added successfully');
       onProductAdded();
-      setFormData(initialFormState); // formani tozalash
-      onClose(); // modalni yopish
+      setFormData(initialFormState);
+      onClose();
     } catch (err) {
       toast.error('Failed to add product');
       console.error(err);
     }
   };
-  
+
 
   if (!isOpen) return null;
 
@@ -194,16 +214,40 @@ const AddProductModal = ({ isOpen, onClose, onProductAdded }) => {
           <input type="file" multiple onChange={handleImageUpload} className="w-full p-2 border border-gray-300 rounded mb-2" />
 
           <label className="block text-sm font-medium mb-1">Materials</label>
-          <div className="flex gap-2 mb-2">
-            <input value={materialKey} onChange={(e) => setMaterialKey(e.target.value)} placeholder="Material (e.g. wool)" className="border p-2 rounded w-full" />
-            <input value={materialValue} onChange={(e) => setMaterialValue(e.target.value)} placeholder="Value (e.g. 20%)" className="border p-2 rounded w-full" />
-            <button type="button" onClick={addMaterial} className="bg-blue-500 text-white px-3 py-2 rounded">Add</button>
-          </div>
-          <div className="text-sm text-gray-600 mb-4">
-            {Object.entries(formData.materials).map(([key, val]) => (
-              <div key={key}>{key}: {val}</div>
-            ))}
-          </div>
+          {materialsList.map((item, index) => (
+            <div key={index} className="flex gap-2 mb-2">
+              <input
+                type="text"
+                placeholder="Material (e.g. wool)"
+                value={item.key}
+                onChange={(e) => handleMaterialChange(index, 'key', e.target.value)}
+                className="border p-2 rounded w-full"
+              />
+              <input
+                type="text"
+                placeholder="Value (e.g. 20%)"
+                value={item.value}
+                onChange={(e) => handleMaterialChange(index, 'value', e.target.value)}
+                className="border p-2 rounded w-full"
+              />
+              <button
+                type="button"
+                onClick={() => removeMaterial(index)}
+                className="bg-red-500 text-white px-2 py-1 rounded"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={() => setMaterialsList([...materialsList, { key: '', value: '' }])}
+            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
+          >
+            Add Material
+          </button>
+
+
 
           <div className="flex justify-end gap-2">
             <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add Product</button>
